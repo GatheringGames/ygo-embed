@@ -78,11 +78,12 @@ document.addEventListener('DOMContentLoaded', async function() {
     const cardCache = {};
 
     document.querySelectorAll('p').forEach(p => {
-      const match = p.textContent.trim().match(/^https:\/\/ygoprodeck\.com\/card\/(?:[\w-]+-)?(\d+)$/i);
+      const match = p.textContent.trim().match(/^embed::(.+)$/i);
       if (match) {
+        const cardName = match[1].trim();
         const wrapper = document.createElement('div');
         wrapper.className = 'ygo-card-embed';
-        wrapper.setAttribute('data-card-name', p.textContent.trim().split('/card/')[1].replace(/-\d+$/, '').replace(/-/g, ' '));
+        wrapper.setAttribute('data-card-name', cardName);
         wrapper.innerHTML = '<br>';
         p.replaceWith(wrapper);
       }
