@@ -273,11 +273,23 @@ document.addEventListener('DOMContentLoaded', async function() {
         statsHTML += `</div>`;
 
     
+        const tcgPrice = card.card_prices?.[0]?.tcgplayer_price || 'N/A';
+        const mkPrice = card.card_prices?.[0]?.cardmarket_price || 'N/A';
+        
+        const priceHTML = `
+          <p class="ygo-card-price">
+            <strong>TCGplayer:</strong> $${tcgPrice}<br>
+            <strong>Cardmarket:</strong> €${mkPrice}
+          </p>
+        `;
+
         details.innerHTML = `
           <h4 class="ygo-card-name">${card.name}</h4>
           ${statsHTML}
-          <p class=\"ygo-card-oracle-text\">${descHTML}</p>
+          <p class="ygo-card-oracle-text">${descHTML}</p>
+          ${priceHTML}
         `;
+
     
         container.appendChild(details);
         embedDiv.innerHTML = '';
