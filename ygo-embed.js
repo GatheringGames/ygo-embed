@@ -260,3 +260,4 @@ document.addEventListener('DOMContentLoaded', async function() {
         embedDiv.textContent = 'Error loading card data.';
       }
     });
+});
