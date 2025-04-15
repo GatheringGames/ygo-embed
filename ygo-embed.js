@@ -102,6 +102,7 @@ document.addEventListener('DOMContentLoaded', async function () {
       display: block;
       margin-left: auto;
       margin-right: auto;
+      cursor: zoom-in;
     }
 
     .ygo-decklist-card .card-qty {
@@ -109,6 +110,15 @@ document.addEventListener('DOMContentLoaded', async function () {
       margin-top: 2px;
       font-weight: bold;
       color: #fff;
+    }
+
+    .ygo-decklist-card a {
+      color: #fff;
+      text-decoration: none;
+      font-weight: bold;
+      display: block;
+      margin-top: 4px;
+      cursor: pointer;
     }
   `;
   document.head.appendChild(style);
@@ -351,14 +361,33 @@ document.addEventListener('DOMContentLoaded', async function () {
         const data = await res.json();
         const card = data.data[0];
 
-        for (let i = 0; i < qty; i++) {
-          const img = document.createElement('img');
-          img.src = card.card_images[0].image_url_small;
-          img.alt = name;
-          img.title = name;
-          img.addEventListener('click', () => window.open(card.card_images[0].image_url, '_blank'));
-          grid.appendChild(img);
-        }
+    for (let i = 0; i < qty; i++) {
+      const cardDiv = document.createElement('div');
+      cardDiv.className = 'ygo-decklist-card';
+    
+      const img = document.createElement('img');
+      img.src = card.card_images[0].image_url_small;
+      img.alt = name;
+      img.title = name;
+      img.style.cursor = 'zoom-in';
+      img.addEventListener('click', () => window.open(card.card_images[0].image_url, '_blank'));
+    
+      const nameLink = document.createElement('a');
+      nameLink.textContent = name.trim();
+      nameLink.href = card.card_images[0].image_url;
+      nameLink.target = '_blank';
+      nameLink.rel = 'noopener nofollow';
+      nameLink.style.display = 'block';
+      nameLink.style.marginTop = '4px';
+      nameLink.style.color = '#fff';
+      nameLink.style.textDecoration = 'none';
+      nameLink.style.cursor = 'pointer';
+    
+      cardDiv.appendChild(img);
+      cardDiv.appendChild(nameLink);
+      grid.appendChild(cardDiv);
+    }
+
       } catch (err) {
         console.warn(`❌ Could not load card: ${name}`, err);
       }
