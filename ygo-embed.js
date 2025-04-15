@@ -126,16 +126,27 @@ document.addEventListener('DOMContentLoaded', async function() {
 
             const descHTML = card.desc.replace(/\n/g, '<br><br>');
 
-            details.innerHTML = `
-                <h4 class="ygo-card-name">${card.name}</h4>
-                <p class="ygo-card-type-line">${card.type}</p>
-                <p class="ygo-card-oracle-text">${descHTML}</p>
+            const statsHTML = `
+            <div style=\"display:grid;grid-template-columns:repeat(2, 1fr);gap:8px;margin-bottom:12px;\">
+                <div><strong>Type:</strong> ${card.type}</div>
+                <div><strong>Attribute:</strong> ${card.attribute || 'N/A'}</div>
+                <div><strong>Typing:</strong> ${card.race}</div>
+                <div><strong>Level/Rank:</strong> ${card.level || card.rank || 'N/A'}</div>
+                <div><strong>ATK:</strong> ${card.atk !== undefined ? card.atk : 'N/A'}</div>
+                <div><strong>DEF:</strong> ${card.def !== undefined ? card.def : 'N/A'}</div>
+            </div>
             `;
-
+    
+            details.innerHTML = `
+                <h4 class=\"ygo-card-name\">${card.name}</h4>
+                ${statsHTML}
+                <p class=\"ygo-card-oracle-text\">${descHTML}</p>
+            `;
+    
             container.appendChild(details);
             embedDiv.innerHTML = '';
             embedDiv.appendChild(container);
-
+    
         } catch (err) {
             console.error('Error loading card:', err);
             embedDiv.textContent = 'Error loading card data.';
