@@ -233,7 +233,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         const descHTML = card.desc.replace(/\n/g, '<br><br>');
     
         const statsHTML = `
-          <div style=\"display:grid;grid-template-columns:repeat(2, 1fr);gap:8px;margin-bottom:12px;\">
+          <div style="display:grid;grid-template-columns:repeat(2, 1fr);gap:8px;margin-bottom:12px;">
             <div><strong>Type:</strong> ${card.type}</div>
             <div><strong>Attribute:</strong> ${card.attribute || 'N/A'}</div>
             <div><strong>Typing:</strong> ${card.race}</div>
