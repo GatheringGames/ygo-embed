@@ -96,7 +96,7 @@ document.addEventListener('DOMContentLoaded', async function () {
       width: 100%;
       max-width: 120px;
       height: auto;
-      border-radius: 4px;
+      border-radius: 2px !important;
       box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
       margin-bottom: 4px;
       display: block;
