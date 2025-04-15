@@ -266,6 +266,17 @@ document.addEventListener('DOMContentLoaded', async function() {
       } catch (err) {
         console.error('Error loading card:', err);
         embedDiv.textContent = 'Error loading card data.';
+
+            // Global tap listener to hide hover if user taps outside a hover-card
+        if (isMobile) {
+          document.addEventListener('click', (e) => {
+            const tappedCard = e.target.closest('.hover-card');
+            if (!tappedCard) {
+              hoverDiv.style.display = 'none';
+              lastTapped = null;
+            }
+          });
+        }
       }
     });
 });
