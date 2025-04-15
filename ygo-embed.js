@@ -1,85 +1,82 @@
 document.addEventListener('DOMContentLoaded', async function() {
-
+    console.log("✅ YGO embed script loaded");
     // Inject CSS into the page
     const style = document.createElement('style');
     style.textContent = `
-.ygo-embed-container {
-  display: flex;
-  gap: 16px;
-  align-items: center;
-  flex-direction: row;
-  background-color: #394042;
-  border-radius: 8px;
-  padding: 16px;
-  margin: 16px 0;
-  border: 2px solid #5c696d;
-  color: #ffffff;
-}
-
-@media (max-width: 600px) {
-  .ygo-embed-container {
-    flex-direction: column;
-    align-items: center;
-  }
-}
-
-.ygo-card-image-container {
-  flex: 0 0 auto;
-  text-align: center;
-}
-
-.ygo-card-image {
-  width: 250px;
-  height: 364px;
-  object-fit: cover;
-  cursor: zoom-in;
-  border: none;
-  display: block;
-  margin: 0 auto;
-}
-
-.ygo-card-details {
-  font-family: Arial, sans-serif;
-  line-height: 1.5;
-  color: #ffffff;
-  flex: 1;
-}
-
-.ygo-card-name {
-  margin: 0 0 8px;
-  font-size: 1.2em;
-  color: #ffffff;
-}
-
-.ygo-card-type-line,
-.ygo-card-oracle-text,
-.ygo-card-price {
-  margin: 4px 0;
-  color: #ffffff;
-}
-
-.ygo-card-price {
-  font-size: 0.9em;
-}
-
-.hover-card {
-  color: #d8232f;
-  font-weight: bold;
-  cursor: pointer;
-  text-decoration: none;
-}
-
-.hover-card:hover {
-  opacity: 0.8;
-}
-`;
+    .ygo-embed-container {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      flex-direction: row;
+      background-color: #394042;
+      border-radius: 8px;
+      padding: 16px;
+      margin: 16px 0;
+      border: 2px solid #5c696d;
+      color: #ffffff;
+    }
+    
+    @media (max-width: 600px) {
+      .ygo-embed-container {
+        flex-direction: column;
+        align-items: center;
+      }
+    }
+    
+    .ygo-card-image-container {
+      flex: 0 0 auto;
+      text-align: center;
+    }
+    
+    .ygo-card-image {
+      width: 250px;
+      height: 364px;
+      object-fit: cover;
+      cursor: zoom-in;
+      border: none;
+      display: block;
+      margin: 0 auto;
+    }
+    
+    .ygo-card-details {
+      font-family: Arial, sans-serif;
+      line-height: 1.5;
+      color: #ffffff;
+      flex: 1;
+    }
+    
+    .ygo-card-name {
+      margin: 0 0 8px;
+      font-size: 1.2em;
+      color: #ffffff;
+    }
+    
+    .ygo-card-type-line,
+    .ygo-card-oracle-text,
+    .ygo-card-price {
+      margin: 4px 0;
+      color: #ffffff;
+    }
+    
+    .ygo-card-price {
+      font-size: 0.9em;
+    }
+    
+    .hover-card {
+      color: #d8232f;
+      font-weight: bold;
+      cursor: pointer;
+      text-decoration: none;
+    }
+    
+    .hover-card:hover {
+      opacity: 0.8;
+    }
+    `;
+    
     document.head.appendChild(style);
 
-    document.addEventListener('DOMContentLoaded', async function() {
-        console.log("✅ YGO embed script loaded");
-
     const cardCache = {};
-
     const isMobile = /Mobi|Android/i.test(navigator.userAgent);
     let lastTapped = null;
 
