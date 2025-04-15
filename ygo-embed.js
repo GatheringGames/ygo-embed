@@ -266,7 +266,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         `;
     
         details.innerHTML = `
-          <h4 class=\"ygo-card-name\">${card.name}</h4>
+          <h4 class="ygo-card-name">${card.name}</h4>
           ${statsHTML}
           <p class=\"ygo-card-oracle-text\">${descHTML}</p>
         `;
