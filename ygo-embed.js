@@ -206,6 +206,17 @@ document.addEventListener('DOMContentLoaded', async function() {
 
     
     setupHoverPreviews();
+
+            // Global tap listener to hide hover if user taps outside a hover-card
+    if (isMobile) {
+      document.addEventListener('click', (e) => {
+        const tappedCard = e.target.closest('.hover-card');
+        if (!tappedCard) {
+          hoverDiv.style.display = 'none';
+          lastTapped = null;
+        }
+      });
+    }
     
     document.querySelectorAll('.ygo-card-embed').forEach(async embedDiv => {
       const cardName = embedDiv.getAttribute('data-card-name');
@@ -267,16 +278,6 @@ document.addEventListener('DOMContentLoaded', async function() {
         console.error('Error loading card:', err);
         embedDiv.textContent = 'Error loading card data.';
 
-            // Global tap listener to hide hover if user taps outside a hover-card
-        if (isMobile) {
-          document.addEventListener('click', (e) => {
-            const tappedCard = e.target.closest('.hover-card');
-            if (!tappedCard) {
-              hoverDiv.style.display = 'none';
-              lastTapped = null;
-            }
-          });
-        }
       }
     });
 });
