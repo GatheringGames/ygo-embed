@@ -163,7 +163,7 @@ document.addEventListener('DOMContentLoaded', async function() {
             if (!cardCache[name]) {
                 const res = await fetch(`https://db.ygoprodeck.com/api/v7/cardinfo.php?name=${encodeURIComponent(name)}`);
                 const data = await res.json();
-                cardCache[name] = data.data[0].card_images[0].image_url;
+                cardCache[name] = data.data[0].card_images[0].image_url_small;
             }
             hoverDiv.innerHTML = `<img src="${cardCache[name]}" style="width:223px;border-radius:8px;box-shadow:0 4px 8px rgba(0,0,0,0.3);">`;
             hoverDiv.style.display = 'block';
