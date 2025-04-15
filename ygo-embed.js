@@ -82,7 +82,7 @@ document.addEventListener('DOMContentLoaded', async function() {
       if (match) {
         const wrapper = document.createElement('div');
         wrapper.className = 'ygo-card-embed';
-        wrapper.setAttribute('data-card-id', match[1]);
+        wrapper.setAttribute('data-card-name', p.textContent.trim().split('/card/')[1].replace(/-\d+$/, '').replace(/-/g, ' '));
         wrapper.innerHTML = '<br>';
         p.replaceWith(wrapper);
       }
@@ -91,7 +91,7 @@ document.addEventListener('DOMContentLoaded', async function() {
 
     document.querySelectorAll('.ygo-card-embed').forEach(async embedDiv => {
         const cardId = embedDiv.getAttribute('data-card-id');
-        const apiUrl = `https://db.ygoprodeck.com/api/v7/cardinfo.php?id=${cardId}`;
+        const apiUrl = `https://db.ygoprodeck.com/api/v7/cardinfo.php?name=${encodeURIComponent(cardName)}`;
 
         try {
             const res = await fetch(apiUrl);
