@@ -78,31 +78,37 @@ document.addEventListener('DOMContentLoaded', async function () {
       opacity: 0.8;
     }
 
-    .ygo-decklist {
-      margin: 16px 0;
-    }
-
-    .ygo-deck-section {
-      margin-bottom: 20px;
-    }
-
-    .ygo-deck-title {
-      font-weight: bold;
-      margin-bottom: 8px;
-      font-size: 1.1em;
-      color: #ffffff;
-    }
-
-    .ygo-deck-grid {
-      display: flex;
-      flex-wrap: wrap;
+    .ygo-decklist-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
       gap: 8px;
+      margin: 12px 0;
+      padding: 0;
     }
 
-    .ygo-deck-grid img {
-      width: 100px;
-      border-radius: 6px;
-      cursor: pointer;
+    .ygo-decklist-card {
+      text-align: center;
+      font-size: 0.8em;
+      line-height: 1.3;
+    }
+
+    .ygo-decklist-card img {
+      width: 100%;
+      max-width: 120px;
+      height: auto;
+      border-radius: 4px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+      margin-bottom: 4px;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .ygo-decklist-card .card-qty {
+      display: block;
+      margin-top: 2px;
+      font-weight: bold;
+      color: #fff;
     }
   `;
   document.head.appendChild(style);
