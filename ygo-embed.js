@@ -339,7 +339,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     const names = JSON.parse(section.getAttribute('data-card-names'));
     const container = document.createElement('div');
     container.className = 'ygo-deck-section';
-    container.innerHTML = `<div class="ygo-deck-title">${titleMap[deckType]}</div>`;
+    container.innerHTML = `<h3 class="ygo-deck-title">${titleMap[deckType]}</h3>`;
     const grid = document.createElement('div');
     grid.className = 'ygo-decklist-grid';
 
