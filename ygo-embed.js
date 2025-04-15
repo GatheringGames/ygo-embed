@@ -341,7 +341,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     container.className = 'ygo-deck-section';
     container.innerHTML = `<div class="ygo-deck-title">${titleMap[deckType]}</div>`;
     const grid = document.createElement('div');
-    grid.className = 'ygo-deck-grid';
+    grid.className = 'ygo-decklist-grid';
 
     for (let entry of names) {
       const [name, qtyStr] = entry.split(/\sx(\d+)$/);
