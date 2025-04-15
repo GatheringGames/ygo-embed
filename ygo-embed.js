@@ -77,6 +77,28 @@ document.addEventListener('DOMContentLoaded', async function() {
 
     const cardCache = {};
 
+    const isMobile = /Mobi|Android/i.test(navigator.userAgent);
+    let lastTapped = null;
+
+    const hoverDiv = document.createElement('div');
+    Object.assign(hoverDiv.style, {
+      position: 'absolute',
+      pointerEvents: 'none',
+      zIndex: '9999',
+      display: 'none',
+      maxWidth: '90vw'
+    });
+    document.body.appendChild(hoverDiv);
+    
+    window.addEventListener('scroll', () => {
+      if (hoverDiv.style.display === 'block' && lastTapped) {
+        const rect = lastTapped.getBoundingClientRect();
+        hoverDiv.style.top = `${window.scrollY + rect.bottom + 10}px`;
+        hoverDiv.style.left = '50%';
+        hoverDiv.style.transform = 'translateX(-50%)';
+      }
+    });
+    
     document.querySelectorAll('p').forEach(p => {
       const match = p.textContent.trim().match(/^embed::(.+)$/i);
       if (match) {
@@ -88,111 +110,150 @@ document.addEventListener('DOMContentLoaded', async function() {
         p.replaceWith(wrapper);
       }
     });
-
-
-    document.querySelectorAll('.ygo-card-embed').forEach(async embedDiv => {
-        const cardName = embedDiv.getAttribute('data-card-name');
-        const apiUrl = `https://db.ygoprodeck.com/api/v7/cardinfo.php?name=${encodeURIComponent(cardName)}`;
-
-        try {
-            const res = await fetch(apiUrl);
-            const data = await res.json();
-            const card = data.data[0];
-
-            const imgUrl = card.card_images[0].image_url;
-
-            const container = document.createElement('div');
-            container.className = 'ygo-embed-container';
-
-            const imgContainer = document.createElement('div');
-            imgContainer.className = 'ygo-card-image-container';
-
-            const imgLink = document.createElement('a');
-            imgLink.href = imgUrl;
-            imgLink.target = '_blank';
-            imgLink.rel = 'noopener nofollow';
-
-            const img = document.createElement('img');
-            img.className = 'ygo-card-image';
-            img.src = imgUrl;
-            img.alt = card.name;
-
-            imgLink.appendChild(img);
-            imgContainer.appendChild(imgLink);
-            container.appendChild(imgContainer);
-
-            const details = document.createElement('div');
-            details.className = 'ygo-card-details';
-
-            const descHTML = card.desc.replace(/\n/g, '<br><br>');
-
-            const statsHTML = `
-            <div style=\"display:grid;grid-template-columns:repeat(2, 1fr);gap:8px;margin-bottom:12px;\">
-                <div><strong>Type:</strong> ${card.type}</div>
-                <div><strong>Attribute:</strong> ${card.attribute || 'N/A'}</div>
-                <div><strong>Typing:</strong> ${card.race}</div>
-                <div><strong>Level/Rank:</strong> ${card.level || card.rank || 'N/A'}</div>
-                <div><strong>ATK:</strong> ${card.atk !== undefined ? card.atk : 'N/A'}</div>
-                <div><strong>DEF:</strong> ${card.def !== undefined ? card.def : 'N/A'}</div>
-            </div>
-            `;
     
-            details.innerHTML = `
-                <h4 class=\"ygo-card-name\">${card.name}</h4>
-                ${statsHTML}
-                <p class=\"ygo-card-oracle-text\">${descHTML}</p>
-            `;
-    
-            container.appendChild(details);
-            embedDiv.innerHTML = '';
-            embedDiv.appendChild(container);
-    
-        } catch (err) {
-            console.error('Error loading card:', err);
-            embedDiv.textContent = 'Error loading card data.';
-        }
-    });
-
-    // Hover functionality
-    const hoverDiv = document.createElement('div');
-    Object.assign(hoverDiv.style, {
-        position: 'fixed',
-        pointerEvents: 'none',
-        zIndex: '9999',
-        display: 'none',
-        maxWidth: '90vw'
-    });
-    document.body.appendChild(hoverDiv);
-
-    document.querySelectorAll('.dib-post-content p, .dib-post-content li, .dib-post-content h2, .dib-post-content h3, .dib-post-content h4').forEach(node => {
+    // Hover preview setup
+    function setupHoverPreviews() {
+      document.querySelectorAll('.dib-post-content p, .dib-post-content li, .dib-post-content h2, .dib-post-content h3, .dib-post-content h4').forEach(node => {
         node.innerHTML = node.innerHTML.replace(/\[\[([^\]]+)\]\]/g, (_, name) => `<span class="hover-card" data-card-name="${name}">${name}</span>`);
-    });
-
-    document.querySelectorAll('.hover-card').forEach(elem => {
-        elem.addEventListener('mouseenter', async function(e) {
-            const name = this.dataset.cardName;
-            if (!cardCache[name]) {
-                const res = await fetch(`https://db.ygoprodeck.com/api/v7/cardinfo.php?name=${encodeURIComponent(name)}`);
-                const data = await res.json();
-                cardCache[name] = data.data[0].card_images[0].image_url_small;
-            }
-            hoverDiv.innerHTML = `<img src="${cardCache[name]}" style="width:223px;border-radius:8px;box-shadow:0 4px 8px rgba(0,0,0,0.3);">`;
-            hoverDiv.style.display = 'block';
-            hoverDiv.style.top = e.clientY + 15 + 'px';
-            hoverDiv.style.left = e.clientX + 15 + 'px';
+      });
+    
+      document.querySelectorAll('.hover-card').forEach(elem => {
+        elem.style.color = '#d8232f';
+        elem.style.fontWeight = 'bold';
+        elem.style.cursor = 'pointer';
+        elem.style.textDecoration = 'none';
+    
+        elem.addEventListener('mouseenter', async function (e) {
+          if (isMobile) return;
+          await loadHover(this.dataset.cardName, e);
         });
-
+    
         elem.addEventListener('mousemove', e => {
-            hoverDiv.style.top = e.clientY + 15 + 'px';
-            hoverDiv.style.left = e.clientX + 15 + 'px';
+          if (!isMobile) positionHover(e);
         });
-
+    
         elem.addEventListener('mouseleave', () => {
-            hoverDiv.style.display = 'none';
+          if (isMobile) return;
+          hoverDiv.style.display = 'none';
         });
-
-        elem.addEventListener('click', () => {
-            window.open(cardCache[elem.dataset.cardName], '_blank');
+    
+        elem.addEventListener('click', async function (e) {
+          e.preventDefault();
+          const name = this.dataset.cardName;
+          if (!cardCache[name]) await loadHover(name, e);
+          if (isMobile) {
+            if (lastTapped === this) {
+              window.open(cardCache[name].imgLarge, '_blank');
+              hoverDiv.style.display = 'none';
+              lastTapped = null;
+            } else {
+              lastTapped = this;
+              showHover(cardCache[name].imgSmall);
+              const rect = this.getBoundingClientRect();
+              hoverDiv.style.top = `${window.scrollY + rect.bottom + 10}px`;
+              hoverDiv.style.left = '50%';
+              hoverDiv.style.transform = 'translateX(-50%)';
+            }
+          } else {
+            window.open(cardCache[name].imgLarge, '_blank');
+          }
         });
+      });
+    }
+    
+    async function loadHover(name, e) {
+      if (cardCache[name]) return showHover(cardCache[name].imgSmall);
+      try {
+        const res = await fetch(`https://db.ygoprodeck.com/api/v7/cardinfo.php?name=${encodeURIComponent(name)}`);
+        const data = await res.json();
+        const card = data.data[0];
+        cardCache[name] = {
+          imgSmall: card.card_images[0].image_url_small,
+          imgLarge: card.card_images[0].image_url
+        };
+        showHover(cardCache[name].imgSmall);
+        if (!isMobile) positionHover(e);
+      } catch (err) {
+        console.error('Error loading hover image:', err);
+      }
+    }
+    
+    function showHover(url) {
+      hoverDiv.innerHTML = `<img src="${url}" style="width:177px;border-radius:8px;box-shadow:0 4px 8px rgba(0,0,0,0.3);">`;
+      hoverDiv.style.display = 'block';
+    }
+    
+    function positionHover(e) {
+      const hoverWidth = 200;
+      const offset = 15;
+      let x = e.clientX + offset;
+      let y = e.clientY + offset;
+      if (x + hoverWidth > window.innerWidth) x = e.clientX - hoverWidth - offset;
+      hoverDiv.style.top = y + 'px';
+      hoverDiv.style.left = x + 'px';
+      hoverDiv.style.transform = 'none';
+    }
+    
+    setupHoverPreviews();
+    
+    document.querySelectorAll('.ygo-card-embed').forEach(async embedDiv => {
+      const cardName = embedDiv.getAttribute('data-card-name');
+      const apiUrl = `https://db.ygoprodeck.com/api/v7/cardinfo.php?name=${encodeURIComponent(cardName)}`;
+    
+      try {
+        const res = await fetch(apiUrl);
+        const data = await res.json();
+        const card = data.data[0];
+    
+        const imgUrl = card.card_images[0].image_url;
+    
+        const container = document.createElement('div');
+        container.className = 'ygo-embed-container';
+    
+        const imgContainer = document.createElement('div');
+        imgContainer.className = 'ygo-card-image-container';
+    
+        const imgLink = document.createElement('a');
+        imgLink.href = imgUrl;
+        imgLink.target = '_blank';
+        imgLink.rel = 'noopener nofollow';
+    
+        const img = document.createElement('img');
+        img.className = 'ygo-card-image';
+        img.src = imgUrl;
+        img.alt = card.name;
+    
+        imgLink.appendChild(img);
+        imgContainer.appendChild(imgLink);
+        container.appendChild(imgContainer);
+    
+        const details = document.createElement('div');
+        details.className = 'ygo-card-details';
+    
+        const descHTML = card.desc.replace(/\n/g, '<br><br>');
+    
+        const statsHTML = `
+          <div style=\"display:grid;grid-template-columns:repeat(2, 1fr);gap:8px;margin-bottom:12px;\">
+            <div><strong>Type:</strong> ${card.type}</div>
+            <div><strong>Attribute:</strong> ${card.attribute || 'N/A'}</div>
+            <div><strong>Typing:</strong> ${card.race}</div>
+            <div><strong>Level/Rank:</strong> ${card.level || card.rank || 'N/A'}</div>
+            <div><strong>ATK:</strong> ${card.atk !== undefined ? card.atk : 'N/A'}</div>
+            <div><strong>DEF:</strong> ${card.def !== undefined ? card.def : 'N/A'}</div>
+          </div>
+        `;
+    
+        details.innerHTML = `
+          <h4 class=\"ygo-card-name\">${card.name}</h4>
+          ${statsHTML}
+          <p class=\"ygo-card-oracle-text\">${descHTML}</p>
+        `;
+    
+        container.appendChild(details);
+        embedDiv.innerHTML = '';
+        embedDiv.appendChild(container);
+      } catch (err) {
+        console.error('Error loading card:', err);
+        embedDiv.textContent = 'Error loading card data.';
+      }
     });
-});
