@@ -90,7 +90,7 @@ document.addEventListener('DOMContentLoaded', async function() {
 
 
     document.querySelectorAll('.ygo-card-embed').forEach(async embedDiv => {
-        const cardId = embedDiv.getAttribute('data-card-id');
+        const cardId = embedDiv.getAttribute('data-card-name');
         const apiUrl = `https://db.ygoprodeck.com/api/v7/cardinfo.php?name=${encodeURIComponent(cardName)}`;
 
         try {
