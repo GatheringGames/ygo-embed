@@ -188,11 +188,22 @@ document.addEventListener('DOMContentLoaded', async function() {
       const offset = 15;
       let x = e.clientX + offset;
       let y = e.clientY + offset;
-      if (x + hoverWidth > window.innerWidth) x = e.clientX - hoverWidth - offset;
-      hoverDiv.style.top = y + 'px';
-      hoverDiv.style.left = x + 'px';
+    
+      // Prevent going off right edge
+      if (x + hoverWidth > window.innerWidth) {
+        x = e.clientX - hoverWidth - offset;
+      }
+    
+      // Prevent going off bottom edge
+      if (y + 250 > window.innerHeight) {
+        y = e.clientY - 250 - offset;
+      }
+    
+      hoverDiv.style.top = `${y + window.scrollY}px`;
+      hoverDiv.style.left = `${x + window.scrollX}px`;
       hoverDiv.style.transform = 'none';
     }
+
     
     setupHoverPreviews();
     
