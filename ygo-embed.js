@@ -75,6 +75,9 @@ document.addEventListener('DOMContentLoaded', async function() {
 `;
     document.head.appendChild(style);
 
+    document.addEventListener('DOMContentLoaded', async function() {
+        console.log("✅ YGO embed script loaded");
+
     const cardCache = {};
 
     const isMobile = /Mobi|Android/i.test(navigator.userAgent);
