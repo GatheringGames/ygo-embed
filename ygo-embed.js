@@ -149,7 +149,7 @@ document.addEventListener('DOMContentLoaded', async function () {
   // Convert decklist text to HTML structure
   document.querySelectorAll('p').forEach(p => {
     const matchEmbed = p.textContent.trim().match(/^embed::(.+)$/i);
-    const matchDeck = p.textContent.trim().match(/^deck::(main|extra|side)::\[(.*)\]$/i);
+    const matchDeck = p.textContent.trim().match(/^deck::(main|extra|side|upgrade)::\[(.*)\]$/i);
 
     if (matchEmbed) {
       const cardName = matchEmbed[1].trim();
