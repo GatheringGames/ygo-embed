@@ -343,13 +343,16 @@ document.addEventListener('DOMContentLoaded', async function () {
     const titleMap = {
       main: 'Main Deck',
       extra: 'Extra Deck',
-      side: 'Side Deck'
+      side: 'Side Deck',
+      upgrade: null
     };
     const deckType = section.getAttribute('data-deck-section');
     const names = JSON.parse(section.getAttribute('data-card-names'));
     const container = document.createElement('div');
     container.className = 'ygo-deck-section';
-    container.innerHTML = `<h3 class="ygo-deck-title">${titleMap[deckType]}</h3>`;
+    if (titleMap[deckType]) {
+      container.innerHTML = `<h3 class="ygo-deck-title">${titleMap[deckType]}</h3>`;
+    }
     const grid = document.createElement('div');
     grid.className = 'ygo-decklist-grid';
 
